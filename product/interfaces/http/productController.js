@@ -2,6 +2,7 @@
 // Controller to handle HTTP requests related to products.
 
 const generateProductCommandHandler = require('../../../application/GenerateProductCommandHandler');
+const getProductsQueryHandler = require('../../../application/GetProductsQueryHandler');
 
 const productController = {
   /**
@@ -17,7 +18,23 @@ const productController = {
       console.error('Error generating products:', error);
       res.status(500).json({ message: 'Failed to generate products.' });
     }
+  },
+
+  /**
+   * Handles the GET request to retrieve products.
+   * @param {object} req - The Express request object.
+   * @param {object} res - The Express response object.
+   */
+  async getProducts(req, res) {
+    try {
+      const { q: searchTerm } = req.query; // e.g., /products?q=book
+      const products = await getProductsQueryHandler.execute(searchTerm);
+      res.status(200).json(products);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to retrieve products.' });
+    }
   }
 };
 
 module.exports = { productController };
+

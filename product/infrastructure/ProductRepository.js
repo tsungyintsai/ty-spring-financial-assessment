@@ -45,12 +45,40 @@ class ProductRepository {
     const { name, description, category, brand, price, stock_num, SKU } = product;
     const sql = `INSERT INTO products (name, description, category, brand, price, stock_num, SKU) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     return new Promise((resolve, reject) => {
-      this.db.run(sql, [name, description, category, brand, price, stock_num, SKU], function(err) {
+      this.db.run(sql, [name, description, category, brand, price, stock_num, SKU], function (err) {
         if (err) {
           console.error('Error inserting product', err.message);
           reject(err);
         } else {
           resolve({ id: this.lastID });
+        }
+      });
+    });
+  }
+
+  /**
+   * Retrieves products from the database.
+   * If a search term is provided, it filters products by name, description, category, brand, and SKU.
+   * @param {string} [searchTerm] - The term to search for.
+   * @returns {Promise<Product[]>} A promise that resolves with an array of products.
+   */
+  async findAll(searchTerm) {
+    let sql = `SELECT * FROM products`;
+    const params = [];
+
+    if (searchTerm) {
+      sql += ` WHERE name LIKE ? OR description LIKE ? OR category LIKE ? OR brand LIKE ? OR SKU LIKE ?`;
+      const likeTerm = `%${searchTerm}%`;
+      params.push(likeTerm, likeTerm, likeTerm, likeTerm, likeTerm);
+    }
+
+    return new Promise((resolve, reject) => {
+      this.db.all(sql, params, (err, rows) => {
+        if (err) {
+          console.error('Error fetching products', err.message);
+          reject(err);
+        } else {
+          resolve(rows);
         }
       });
     });
