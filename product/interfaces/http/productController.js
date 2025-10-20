@@ -1,8 +1,8 @@
 // product/interfaces/http/productController.js
 // Controller to handle HTTP requests related to products.
 
-const generateProductCommandHandler = require('../../../application/GenerateProductCommandHandler');
-const getProductsQueryHandler = require('../../../application/GetProductsQueryHandler');
+const generateProductCommandHandler = require('../../application/GenerateProductCommandHandler');
+const getProductsQueryHandler = require('../../application/GetProductsQueryHandler');
 
 const productController = {
   /**
