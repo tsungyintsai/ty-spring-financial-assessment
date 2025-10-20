@@ -11,6 +11,7 @@ app.use(express.json());
 
 // Define the route for generating products.
 app.post('/products/generate', productController.generateProducts);
+app.get('/products', productController.getProducts);
 
 // Start the server.
 if (process.env.NODE_ENV !== 'test') {
